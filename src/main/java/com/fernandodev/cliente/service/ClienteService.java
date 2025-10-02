@@ -54,7 +54,7 @@ public class ClienteService {
     }
 
     public List<ClienteDTO> buscarClientesPorNome(String nome) {
-        List<Cliente> clientes = clienteRepository.findByNome(nome);
+        List<Cliente> clientes = clienteRepository.findByNomeContainingIgnoreCase(nome);
         if (clientes.isEmpty()) {
             throw new ResourceNotFoundException("Nenhum cliente encontrado com nome: " + nome);
         }
@@ -63,6 +63,15 @@ public class ClienteService {
                 .toList();
     }
 
+    public List<ClienteDTO> buscarClientesPorCidade(String cidade) {
+        List<Cliente> clientesCidade = clienteRepository.findByCidadeContainingIgnoreCase(cidade);
+        if (clientesCidade.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhum cliente encontrado na cidade: " + cidade);
+        }
+        return clientesCidade.stream()
+                .map(clienteConverter::paraClienteDTO)
+                .toList();
+    }
 
 
 
