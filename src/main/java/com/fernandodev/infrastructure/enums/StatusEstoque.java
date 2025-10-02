@@ -4,5 +4,5 @@ public enum StatusEstoque {
     DISPONIVEL,
     LOCADO,
     LAVANDERIA,
-    MANUTENCAO
+    EM_LOCACAO
 }

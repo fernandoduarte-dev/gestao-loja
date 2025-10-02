@@ -22,9 +22,11 @@ public class Estoque {
     @JoinColumn(name = "produto_id", nullable = false)
     private Produto produto;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
-    private StatusEstoque status; // DISPONIVEL, LOCADO, LAVANDERIA, MANUTENCAO
+    @Column(name = "status", length = 20, nullable = false)
+    private StatusEstoque status = StatusEstoque.DISPONIVEL;
 
+    @Column(name = "quantidade")
     private Integer quantidade;
 }

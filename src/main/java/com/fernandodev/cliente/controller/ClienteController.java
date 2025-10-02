@@ -22,7 +22,7 @@ public class ClienteController {
     }
 
     // Buscar cliente por email
-    @GetMapping
+    @GetMapping("/email")
     public ResponseEntity<ClienteDTO> buscarClientePorEmail(@RequestParam("email") String email) {
         ClienteDTO cliente = clienteService.buscarClientePorEmail(email);
         return ResponseEntity.ok(cliente);
@@ -36,9 +36,16 @@ public class ClienteController {
     }
 
     // Buscar clientes por nome
-    @GetMapping("/nome/{nome}")
-    public ResponseEntity<List<ClienteDTO>> buscarClientePorNome(@PathVariable String nome) {
+    @GetMapping("/nome")
+    public ResponseEntity<List<ClienteDTO>> buscarClientePorNome(@RequestParam ("nome") String nome) {
         List<ClienteDTO> clientes = clienteService.buscarClientesPorNome(nome);
         return ResponseEntity.ok(clientes);
+    }
+
+    // Buscar clientes por cidade
+    @GetMapping("/cidade")
+    public ResponseEntity<List<ClienteDTO>> buscarClientePorCidade(@RequestParam ("cidade") String cidade) {
+        List<ClienteDTO> clientesCity = clienteService.buscarClientesPorCidade(cidade);
+        return ResponseEntity.ok(clientesCity);
     }
 }

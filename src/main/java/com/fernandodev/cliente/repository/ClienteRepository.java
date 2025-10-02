@@ -13,7 +13,10 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     Optional <Cliente> findByEmail(String email);
 
-    List<Cliente> findByNome(String nome);
+    List<Cliente> findByNomeContainingIgnoreCase(String nome);
+
+    List<Cliente> findByCidadeContainingIgnoreCase(String cidade);
+
 
     @Transactional
     void deleteByEmail(String email);

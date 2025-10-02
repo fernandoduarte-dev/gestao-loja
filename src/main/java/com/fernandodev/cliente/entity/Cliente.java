@@ -3,6 +3,8 @@ package com.fernandodev.cliente.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -40,9 +42,11 @@ public class Cliente {
     @Column(name = "cep", length = 9)
     private String cep;
 
-    @Column(name = "telefone", length = 20)
-    private String telefone;
-
     @Column(name = "email", length = 100)
     private String email;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Telefone> telefones;
+
+
 }
