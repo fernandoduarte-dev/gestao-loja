@@ -49,4 +49,6 @@ public class Cliente {
     private List<Telefone> telefones;
 
 
+    public Cliente(Long clienteId) {
+    }
 }

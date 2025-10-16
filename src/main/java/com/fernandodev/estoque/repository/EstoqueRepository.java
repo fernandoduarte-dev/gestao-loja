@@ -1,6 +1,7 @@
 package com.fernandodev.estoque.repository;
 
 import com.fernandodev.estoque.entity.Estoque;
+import com.fernandodev.infrastructure.enums.StatusEstoque;
 import com.fernandodev.produto.entity.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,4 +16,7 @@ public interface EstoqueRepository extends JpaRepository<Estoque, Long> {
     List<Estoque> findByProdutoNomeContaining(String nome);
 
     Optional<Estoque> findByProdutoId(Long produtoId);
+
+
+
 }

@@ -4,12 +4,12 @@ import com.fernandodev.estoque.dto.EstoqueDTO;
 import com.fernandodev.estoque.entity.Estoque;
 import com.fernandodev.estoque.repository.EstoqueRepository;
 import com.fernandodev.infrastructure.converter.ProdutoConverter;
-import com.fernandodev.infrastructure.enums.StatusEstoque;
 import com.fernandodev.infrastructure.etiqueta.ProdutoEtiqueta;
 import com.fernandodev.produto.entity.Produto;
 import com.fernandodev.produto.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -33,18 +33,16 @@ public class EstoqueService {
         Estoque estoque = estoqueRepository.findByProduto(produto)
                 .orElse(Estoque.builder()
                         .produto(produto)
-                        .quantidade(0)
-                        .status(StatusEstoque.DISPONIVEL) // novo registro sempre começa disponível
+                        .quantidadeAtual(0)
                         .build());
 
-        // Atualiza quantidade e status
-        estoque.setQuantidade(estoque.getQuantidade() + quantidade);
-        estoque.setStatus(StatusEstoque.DISPONIVEL); // sempre DISPONÍVEL quando adiciona
+        // Atualiza quantidade atual
+        estoque.setQuantidadeAtual(estoque.getQuantidadeAtual() + quantidade);
 
         // Salva no banco
         estoque = estoqueRepository.save(estoque);
 
-        // Gerar etiquetas (opcional, continua igual)
+        // 🔖 Geração de etiquetas (mantém o mesmo comportamento antigo)
         String pasta = "arquivos-etiquetas";
         File diretorio = new File(pasta);
         if (!diretorio.exists()) {
@@ -53,30 +51,32 @@ public class EstoqueService {
 
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
         String nomeArquivo = pasta + "/etiquetas_" + produto.getSku() + "_" + estoque.getId() + "_" + timestamp + ".pdf";
+
         ProdutoEtiqueta.gerarEtiquetas(produto.getSku(), quantidade, nomeArquivo);
 
         // Retorna DTO
         return EstoqueDTO.builder()
                 .id(estoque.getId())
                 .produto(produtoConverter.paraProdutoDTO(produto))
-                .quantidade(estoque.getQuantidade())
-                .status(estoque.getStatus())
+                .quantidadeAtual(estoque.getQuantidadeAtual())
                 .build();
     }
 
 
+    @Transactional(readOnly = true)
     public List<EstoqueDTO> listarEstoques() {
         return estoqueRepository.findAll()
                 .stream()
                 .map(estoque -> EstoqueDTO.builder()
                         .id(estoque.getId())
                         .produto(produtoConverter.paraProdutoDTO(estoque.getProduto()))
-                        .quantidade(estoque.getQuantidade())
-                        .status(estoque.getStatus())
-                        .build())
+                        .quantidadeAtual(estoque.getQuantidadeAtual())
+                        .build()
+                )
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public EstoqueDTO buscarPorProduto(Long produtoId) {
         Estoque estoque = estoqueRepository.findByProdutoId(produtoId)
                 .orElseThrow(() -> new RuntimeException("Estoque não encontrado para o produto " + produtoId));
@@ -84,8 +84,7 @@ public class EstoqueService {
         return EstoqueDTO.builder()
                 .id(estoque.getId())
                 .produto(produtoConverter.paraProdutoDTO(estoque.getProduto()))
-                .quantidade(estoque.getQuantidade())
-                .status(estoque.getStatus())
+                .quantidadeAtual(estoque.getQuantidadeAtual())
                 .build();
     }
 }
