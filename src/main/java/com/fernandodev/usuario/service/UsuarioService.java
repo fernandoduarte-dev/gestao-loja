@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 
@@ -61,6 +63,20 @@ public class UsuarioService {
             throw new ResourceNotFoundException("Email não encontrado " + email);
 
             }
+    }
+
+    public List<UsuarioDTO> buscarUsuariosPorNome(String nome) {
+
+        List<Usuario> usuarios = usuarioRepository
+                .findByNomeContainingIgnoreCase(nome);
+
+        if (usuarios.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhum usuário encontrado com o nome: " + nome);
+        }
+
+        return usuarios.stream()
+                .map(usuarioConverter::paraUsuarioDTO)
+                .toList();
     }
 
     public void deletaUsuarioPorEmail(String email) {

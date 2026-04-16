@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/usuario")
 @RequiredArgsConstructor
@@ -39,6 +41,13 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> buscarUsuarioPorEmail(@RequestParam("email") String email){
         return ResponseEntity.ok(usuarioService.buscarUsuarioPorEmail(email));
     }
+
+    @GetMapping("/nome")
+    public ResponseEntity<List<UsuarioDTO>> buscarUsuariosPorNome(@RequestParam("nome") String nome) {
+        return ResponseEntity.ok(usuarioService.buscarUsuariosPorNome(nome));
+    }
+
+
 
     @DeleteMapping("/{email}")
     public ResponseEntity<Void> deletaUsuarioPorEmail(@PathVariable String email){
