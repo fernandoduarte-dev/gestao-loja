@@ -14,9 +14,7 @@ public class ProdutoDTO {
     private String nome;
     private String descricao;
     private String tecido;
-    private String tamanho;
     private String cor;
-    private String sku;
     private Double valorVenda;
     private Double valorLocacao;
 }

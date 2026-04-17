@@ -9,96 +9,58 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-    @Service
-    @RequiredArgsConstructor
-    public class ProdutoService {
+@Service
+@RequiredArgsConstructor
+public class ProdutoService {
 
-        private final ProdutoRepository produtoRepository;
-        private final ProdutoConverter produtoConverter;
+    private final ProdutoRepository produtoRepository;
+    private final ProdutoConverter produtoConverter;
 
-        public ProdutoDTO salvarProduto(ProdutoDTO produtoDTO) {
-            Produto produto = produtoConverter.paraProduto(produtoDTO);
+    // ✅ SALVAR PRODUTO (SEM SKU, SEM TAMANHO)
+    public ProdutoDTO salvarProduto(ProdutoDTO produtoDTO) {
+        Produto produto = produtoConverter.paraProduto(produtoDTO);
 
-            // Salva primeiro sem SKU para gerar o ID
-            Produto salvo = produtoRepository.save(produto);
+        Produto salvo = produtoRepository.save(produto);
 
-
-            if (salvo.getSku() == null || salvo.getSku().isBlank()) {
-                String skuGerado = gerarSku(salvo);
-                salvo.setSku(skuGerado);
-                salvo = produtoRepository.save(salvo);
-            }
-
-            return produtoConverter.paraProdutoDTO(salvo);
-        }
-
-
-        // Gerar Sku automático
-        private String gerarSku(Produto produto) {
-            // Nome: pega até 3 letras da primeira palavra
-            String nome = (produto.getNome() != null && !produto.getNome().isBlank())
-                    ? produto.getNome().split(" ")[0].toUpperCase().substring(0, Math.min(3, produto.getNome().split(" ")[0].length()))
-                    : "PRD";
-
-            // Tecido: pega até 3 letras
-            String tecido = (produto.getTecido() != null && !produto.getTecido().isBlank())
-                    ? produto.getTecido().toUpperCase().substring(0, Math.min(3, produto.getTecido().length()))
-                    : "TEC";
-
-            // Cor: pega até 2 letras
-            String cor = (produto.getCor() != null && !produto.getCor().isBlank())
-                    ? produto.getCor().toUpperCase().substring(0, Math.min(2, produto.getCor().length()))
-                    : "XX";
-
-            // Tamanho: usa direto
-            String tamanho = (produto.getTamanho() != null && !produto.getTamanho().isBlank())
-                    ? produto.getTamanho().toUpperCase()
-                    : "UN";
-
-            return nome + "-" + tecido + "-" + cor + "-" + tamanho + "-" + String.format("%05d", produto.getId());
-        }
-
-
-        public List<ProdutoDTO> buscarProdutos(String sku, String tamanho, String cor, String tecido) {
-
-            List<Produto> produtos;
-
-            if (sku != null && !sku.isBlank()) {
-                produtos = produtoRepository.findBySkuContainingIgnoreCase(sku);
-
-            } else if (tamanho != null && cor != null) {
-                produtos = produtoRepository.findByTamanhoAndCorContainingIgnoreCase(tamanho, cor);
-
-            } else if (tamanho != null) {
-                produtos = produtoRepository.findByTamanhoContainingIgnoreCase(tamanho);
-
-            } else if (cor != null) {
-                produtos = produtoRepository.findByCorContainingIgnoreCase(cor);
-
-            } else if (tecido != null) {
-                produtos = produtoRepository.findByTecidoContainingIgnoreCase(tecido);
-
-            } else {
-                produtos = produtoRepository.findAll();
-            }
-
-            return produtos.stream()
-                    .map(produtoConverter::paraProdutoDTO)
-                    .toList();
-        }
-
-        public void deletaProduto(Long id) {
-            Produto produto = produtoRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-
-            produtoRepository.delete(produto);
-        }
-
-
-
+        return produtoConverter.paraProdutoDTO(salvo);
     }
 
+    // ✅ BUSCA SOMENTE POR DADOS DO PRODUTO
+    public List<ProdutoDTO> buscarProdutos(String nome, String cor, String tecido) {
 
+        List<Produto> produtos;
 
+        if (nome != null && !nome.isBlank()) {
+            produtos = produtoRepository.findByNomeContainingIgnoreCase(nome);
 
+        } else if (cor != null && !cor.isBlank()) {
+            produtos = produtoRepository.findByCorContainingIgnoreCase(cor);
 
+        } else if (tecido != null && !tecido.isBlank()) {
+            produtos = produtoRepository.findByTecidoContainingIgnoreCase(tecido);
+
+        } else {
+            produtos = produtoRepository.findAll();
+        }
+
+        return produtos.stream()
+                .map(produtoConverter::paraProdutoDTO)
+                .toList();
+    }
+
+    // ✅ BUSCAR POR ID (vai ser útil pro estoque depois)
+    public ProdutoDTO buscarPorId(Long id) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        return produtoConverter.paraProdutoDTO(produto);
+    }
+
+    // ✅ DELETAR PRODUTO
+    public void deletarProduto(Long id) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        produtoRepository.delete(produto);
+    }
+}

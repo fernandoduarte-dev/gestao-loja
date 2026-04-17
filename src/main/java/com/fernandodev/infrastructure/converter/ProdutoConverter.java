@@ -16,9 +16,7 @@ public class ProdutoConverter {
                 .descricao(produto.getDescricao())
                 .valorLocacao(produto.getValorLocacao())
                 .valorVenda(produto.getValorVenda())
-                .sku(produto.getSku())
                 .cor(produto.getCor())
-                .tamanho(produto.getTamanho())
                 .tecido(produto.getTecido())
                 .build();
     }
@@ -32,9 +30,7 @@ public class ProdutoConverter {
                 .descricao(produtoDTO.getDescricao())
                 .valorLocacao(produtoDTO.getValorLocacao())
                 .valorVenda(produtoDTO.getValorVenda())
-                .sku(produtoDTO.getSku())
                 .cor(produtoDTO.getCor())
-                .tamanho(produtoDTO.getTamanho())
                 .tecido(produtoDTO.getTecido())
                 .build();
     }

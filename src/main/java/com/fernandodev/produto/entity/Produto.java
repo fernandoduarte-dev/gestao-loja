@@ -25,14 +25,10 @@ public class Produto {
     @Column(name = "tecido" , length = 50)
     private String tecido;
 
-    @Column(name = "tamanho" , length = 2)
-    private String tamanho;
 
     @Column(name = "cor" , length = 50)
     private String cor;
 
-    @Column(name = "sku", unique = true)
-    private String sku;
 
     @Column(name = "valor_venda", length = 10)
     private Double valorVenda;

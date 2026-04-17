@@ -3,7 +3,6 @@ package com.fernandodev.produto.controller;
 import com.fernandodev.produto.dto.ProdutoDTO;
 import com.fernandodev.produto.service.ProdutoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,31 +14,31 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
-    // Criar cliente
+    // ✅ CRIAR PRODUTO
     @PostMapping
-    public ResponseEntity<ProdutoDTO> cadastraProduto(@RequestBody ProdutoDTO produtoDTO){
-        return ResponseEntity.ok(produtoService.salvarProduto(produtoDTO));
+    public ProdutoDTO salvar(@RequestBody ProdutoDTO produtoDTO) {
+        return produtoService.salvarProduto(produtoDTO);
     }
 
-    // Buscar Produto
+    // ✅ LISTAR / FILTRAR PRODUTOS
     @GetMapping("/buscar")
-    public List<ProdutoDTO> buscarProdutos(
-            @RequestParam(required = false) String sku,
-            @RequestParam(required = false) String tamanho,
+    public List<ProdutoDTO> buscar(
+            @RequestParam(required = false) String nome,
             @RequestParam(required = false) String cor,
             @RequestParam(required = false) String tecido
     ) {
-        return produtoService.buscarProdutos(sku, tamanho, cor, tecido);
+        return produtoService.buscarProdutos(nome, cor, tecido);
     }
 
-    // Deletar cliente por id
+    // ✅ BUSCAR POR ID
+    @GetMapping("/id/{id}")
+    public ProdutoDTO buscarPorId(@PathVariable Long id) {
+        return produtoService.buscarPorId(id);
+    }
+
+    // ✅ DELETAR PRODUTO
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarProdutoId(@PathVariable Long id) {
-        produtoService.deletaProduto(id);
-        return ResponseEntity.noContent().build();
+    public void deletar(@PathVariable Long id) {
+        produtoService.deletarProduto(id);
     }
-
-
-
-
 }
