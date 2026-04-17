@@ -39,18 +39,14 @@ public class EstoqueMovimentoController {
         service.saida(produtoId, tamanho, quantidade);
     }
 
-    // 🔹 SALDO
-    @GetMapping("/saldo")
-    public Long saldo(
-            @RequestParam Long produtoId,
-            @RequestParam String tamanho
-    ) {
-        return service.saldo(produtoId, tamanho);
-    }
-
     @GetMapping("/saldos")
-    public List<SaldoProjection> saldos() {
-        return service.buscarSaldos();
+    public List<SaldoProjection> saldos(
+            @RequestParam(required = false) Long idProduto,
+            @RequestParam(required = false) String tamanho,
+            @RequestParam(required = false) String tecido,
+            @RequestParam(required = false) String cor
+    ) {
+        return service.buscarSaldos(idProduto, tamanho, tecido, cor);
     }
 
     // 🔹 HISTÓRICO

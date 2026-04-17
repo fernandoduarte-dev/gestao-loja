@@ -112,8 +112,13 @@ public class EstoqueMovimentoService {
     }
 
     @Transactional(readOnly = true)
-    public List<SaldoProjection> buscarSaldos() {
-        return repository.buscarSaldos();
+    public List<SaldoProjection> buscarSaldos(
+            Long idProduto,
+            String tamanho,
+            String tecido,
+            String cor
+    ) {
+        return repository.buscarSaldos(idProduto, tamanho, tecido, cor);
     }
 
     @Transactional(readOnly = true)

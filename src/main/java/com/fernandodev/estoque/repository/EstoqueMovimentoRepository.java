@@ -55,6 +55,10 @@ public interface EstoqueMovimentoRepository extends JpaRepository<EstoqueMovimen
             END
         ), 0) AS saldo
     FROM EstoqueMovimento e
+    WHERE (:idProduto IS NULL OR e.produto.id = :idProduto)
+      AND (:tamanho IS NULL OR e.tamanho = :tamanho)
+      AND (:tecido IS NULL OR e.produto.tecido ILIKE CONCAT('%', :tecido, '%'))
+      AND (:cor IS NULL OR e.produto.cor ILIKE CONCAT('%', :cor, '%'))
     GROUP BY 
         e.produto.id, 
         e.produto.nome, 
@@ -62,7 +66,11 @@ public interface EstoqueMovimentoRepository extends JpaRepository<EstoqueMovimen
         e.produto.cor,
         e.tamanho
 """)
-    List<SaldoProjection> buscarSaldos();
-
+    List<SaldoProjection> buscarSaldos(
+            @Param("idProduto") Long idProduto,
+            @Param("tamanho") String tamanho,
+            @Param("tecido") String tecido,
+            @Param("cor") String cor
+    );
 
 }
