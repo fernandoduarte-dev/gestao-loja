@@ -1,15 +1,11 @@
 package com.fernandodev.estoque.controller;
 
 import com.fernandodev.estoque.dto.EstoqueMovimentoDTO;
-import com.fernandodev.estoque.dto.SaldoDTO;
-import com.fernandodev.estoque.dto.SaldoProjection;
 import com.fernandodev.estoque.service.EstoqueMovimentoService;
-import com.fernandodev.infrastructure.enums.TipoMovimento;
-import com.fernandodev.usuario.entity.Usuario;
+import com.fernandodev.produto.dto.ProdutoItemSaldoProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -39,8 +35,9 @@ public class EstoqueMovimentoController {
         service.saida(produtoId, tamanho, quantidade);
     }
 
-    @GetMapping("/saldos")
-    public List<SaldoProjection> saldos(
+    // 🔹 RESUMO DE ESTOQUE (novo modelo)
+    @GetMapping("/resumo")
+    public List<ProdutoItemSaldoProjection> resumo(
             @RequestParam(required = false) Long idProduto,
             @RequestParam(required = false) String tamanho,
             @RequestParam(required = false) String tecido,

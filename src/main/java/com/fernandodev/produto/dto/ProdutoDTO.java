@@ -12,9 +12,7 @@ import lombok.*;
 public class ProdutoDTO {
     private Long id;
     private String nome;
-    private String descricao;
     private String tecido;
     private String cor;
-    private Double valorVenda;
-    private Double valorLocacao;
+
 }

@@ -13,9 +13,9 @@ public record EstoqueMovimentoDTO(
         Long id,
         Long produtoId,
         String produtoNome,
-        String tamanho,
-        Integer quantidade,
+        Long produtoItemId,
         TipoMovimento tipoMovimento,
         LocalDateTime data,
         String usuarioNome
+
 ) {}

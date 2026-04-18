@@ -19,8 +19,6 @@ public class Produto {
     @Column(name = "nome" , length = 50)
     private String nome;
 
-    @Column(name = "descricao" , length = 200)
-    private String descricao;
 
     @Column(name = "tecido" , length = 50)
     private String tecido;
@@ -30,10 +28,5 @@ public class Produto {
     private String cor;
 
 
-    @Column(name = "valor_venda", length = 10)
-    private Double valorVenda;
-
-    @Column(name = "valor_locacao", length = 10)
-    private Double valorLocacao;
 
 }

@@ -13,9 +13,6 @@ public class ProdutoConverter {
         return ProdutoDTO.builder()
                 .id(produto.getId())
                 .nome(produto.getNome())
-                .descricao(produto.getDescricao())
-                .valorLocacao(produto.getValorLocacao())
-                .valorVenda(produto.getValorVenda())
                 .cor(produto.getCor())
                 .tecido(produto.getTecido())
                 .build();
@@ -27,9 +24,6 @@ public class ProdutoConverter {
         return Produto.builder()
                 .id(produtoDTO.getId())
                 .nome(produtoDTO.getNome())
-                .descricao(produtoDTO.getDescricao())
-                .valorLocacao(produtoDTO.getValorLocacao())
-                .valorVenda(produtoDTO.getValorVenda())
                 .cor(produtoDTO.getCor())
                 .tecido(produtoDTO.getTecido())
                 .build();
