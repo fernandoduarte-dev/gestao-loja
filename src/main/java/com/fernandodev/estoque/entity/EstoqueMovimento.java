@@ -37,7 +37,7 @@ public class EstoqueMovimento {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    //atualição movimento estoque
+    //atualização movimento estoque
 
     @ManyToOne
     @JoinColumn(name = "produto_item_id")

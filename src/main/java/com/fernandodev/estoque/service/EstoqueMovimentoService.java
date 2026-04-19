@@ -105,6 +105,40 @@ public class EstoqueMovimentoService {
         }
     }
 
+    @Transactional
+    public void saidaPorItens(List<Long> itensIds) {
+
+        Usuario usuario = buscarUsuarioLogado();
+
+        List<ProdutoItem> itens = produtoItemRepository.findAllById(itensIds);
+
+        if (itens.size() != itensIds.size()) {
+            throw new RuntimeException("Alguns itens não foram encontrados");
+        }
+
+        for (ProdutoItem item : itens) {
+
+            if (!item.getDisponivel()) {
+                throw new RuntimeException("Item já indisponível: " + item.getSku());
+            }
+
+            // 🔻 baixa o item
+            item.setDisponivel(false);
+            produtoItemRepository.save(item);
+
+            // 🔻 cria movimento correto
+            EstoqueMovimento mov = EstoqueMovimento.builder()
+                    .produtoItem(item)
+                    .tipoMovimento(TipoMovimento.SAIDA)
+                    .data(LocalDateTime.now())
+                    .usuario(usuario)
+                    .build();
+
+            repository.save(mov); // ✅ CORRETO
+        }
+
+    }
+
     // 🔹 SALDO (agora vem do ProdutoItem)
     @Transactional(readOnly = true)
     public Long saldo(Long produtoId, String tamanho) {
@@ -141,14 +175,29 @@ public class EstoqueMovimentoService {
     }
 
     private EstoqueMovimentoDTO toDTO(EstoqueMovimento e) {
+
         return new EstoqueMovimentoDTO(
                 e.getId(),
+
+                // Produto
                 e.getProdutoItem() != null ? e.getProdutoItem().getProduto().getId() : null,
                 e.getProdutoItem() != null ? e.getProdutoItem().getProduto().getNome() : null,
+
+                // Produto Item
                 e.getProdutoItem() != null ? e.getProdutoItem().getId() : null,
+
+
+                // Tipo movimento
                 e.getTipoMovimento(),
+
+                // Data
                 e.getData(),
-                e.getUsuario() != null ? e.getUsuario().getNome() : null
+
+                // Usuário
+                e.getUsuario() != null ? e.getUsuario().getNome() : null,
+
+                // 🔥 TAMANHO (CORREÇÃO)
+                e.getProdutoItem() != null ? e.getProdutoItem().getTamanho() : null
         );
     }
 

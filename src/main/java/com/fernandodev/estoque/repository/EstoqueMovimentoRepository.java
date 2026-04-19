@@ -12,11 +12,12 @@ public interface EstoqueMovimentoRepository extends JpaRepository<EstoqueMovimen
 
     // 🔹 Histórico geral
     @Query("""
-        SELECT em
-        FROM EstoqueMovimento em
-        JOIN em.usuario u
-        ORDER BY em.data DESC
-    """)
+SELECT e FROM EstoqueMovimento e
+LEFT JOIN FETCH e.produtoItem pi
+LEFT JOIN FETCH pi.produto
+LEFT JOIN FETCH e.usuario
+ORDER BY e.data DESC
+""")
     List<EstoqueMovimento> buscarHistorico();
 
     // 🔹 Movimentos por PRODUTO (via ProdutoItem)
@@ -49,3 +50,4 @@ public interface EstoqueMovimentoRepository extends JpaRepository<EstoqueMovimen
     """)
     List<EstoqueMovimento> buscarPorUsuario(@Param("usuarioId") Long usuarioId);
 }
+

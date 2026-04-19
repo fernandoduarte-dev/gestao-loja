@@ -92,4 +92,21 @@ public interface ProdutoItemRepository extends JpaRepository<ProdutoItem, Long> 
     WHERE pi.produto.id = :produtoId
 """)
     Long contarTotalPorProduto(@Param("produtoId") Long produtoId);
+
+    List<ProdutoItem> findByProdutoIdAndDisponivelTrue(Long produtoId);
+
+    @Query("""
+    SELECT pi
+    FROM ProdutoItem pi
+    WHERE pi.produto.id = :produtoId
+      AND (:tamanho IS NULL OR pi.tamanho = :tamanho)
+      AND pi.disponivel = true
+""")
+    List<ProdutoItem> findDisponiveisByProdutoAndTamanho(
+            @Param("produtoId") Long produtoId,
+            @Param("tamanho") String tamanho
+    );
+
+
 }
+
