@@ -1,6 +1,7 @@
 package com.fernandodev.estoque.repository;
 
 import com.fernandodev.estoque.entity.EstoqueMovimento;
+import com.fernandodev.etiqueta.EtiquetaDTO;
 import com.fernandodev.infrastructure.enums.TipoMovimento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -49,5 +50,31 @@ ORDER BY e.data DESC
         ORDER BY em.data DESC
     """)
     List<EstoqueMovimento> buscarPorUsuario(@Param("usuarioId") Long usuarioId);
+
+
+    //Query para levar etiquetas com data de registro
+    @Query("""
+    SELECT new com.fernandodev.etiqueta.EtiquetaDTO(
+        pi.produto.id,
+        pi.produto.nome,
+        pi.sku,
+        pi.tamanho,
+        pi.disponivel,
+        MAX(em.data)
+    )
+    FROM EstoqueMovimento em
+    JOIN em.produtoItem pi
+    WHERE (:produtoId IS NULL OR pi.produto.id = :produtoId)
+    GROUP BY 
+        pi.id,
+        pi.produto.id,
+        pi.produto.nome,
+        pi.sku,
+        pi.tamanho,
+        pi.disponivel
+""")
+    List<EtiquetaDTO> buscarEtiquetas(@Param("produtoId") Long produtoId);
 }
+
+
 

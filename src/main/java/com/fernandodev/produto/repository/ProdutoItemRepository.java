@@ -107,6 +107,13 @@ public interface ProdutoItemRepository extends JpaRepository<ProdutoItem, Long> 
             @Param("tamanho") String tamanho
     );
 
+    @Query("""
+    SELECT pi
+    FROM ProdutoItem pi
+    WHERE (:produtoId IS NULL OR pi.produto.id = :produtoId)
+""")
+    List<ProdutoItem> buscarParaEtiquetas(@Param("produtoId") Long produtoId);
+
 
 }
 
